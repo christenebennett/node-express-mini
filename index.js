@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const db = require('./data/db.js');
 
@@ -7,6 +8,7 @@ const PORT = 5000;
 
 // this is a piece of middleware that will make your POST requests work
 server.use(express.json());
+server.use(cors());
 
 console.log('db', db);
 
