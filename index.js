@@ -13,9 +13,7 @@ console.log('db', db);
 
 server.get('/', (req, res) => {
   res.send('Hello there!')
-})
-
-
+});
 
 server.get('/api/users', (req, res) => {
   db.find()
@@ -24,9 +22,8 @@ server.get('/api/users', (req, res) => {
     })
     .catch(error => {
       res.status(500).json({error: "The users information could not be retrieved."})
-    }
-    )
-})
+    })
+});
 
 server.post('/api/users', (req, res) => {
   const newUser = req.body;
@@ -41,7 +38,7 @@ server.post('/api/users', (req, res) => {
   } else {
     res.status(400).statusMessage({errorMessage: "Please provide name and bio for the user."})
   }
-})
+});
 
 server.delete('/api/users/:id', (req, res) => {
   const { id } = req.params;
@@ -56,21 +53,29 @@ server.delete('/api/users/:id', (req, res) => {
     .catch(error => {
       res.status(500).json({message: "The user could not be removed."})
     })
-})
+});
 
 server.get('/api/users/:id', (req, res) => {
   const { id } = req.params;
   db.findById(id)
     .then(users => {
-      res.json(users);
+      if (users) {
+        res.json(users);
+      } else {
+        res.status(404).json({message: "The user with the specified ID does not exist."})
+      }
     })
     .catch(error => {
       res.status(404).json({message: "The user with the specified ID does not exist."})
-    }
-    )
+    })
+});
+
+server.put('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  db.update(id)
 })
 
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
-})
+});
 
