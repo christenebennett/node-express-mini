@@ -71,8 +71,23 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 server.put('/api/users/:id', (req, res) => {
+  const user = req.body;
   const { id } = req.params;
-  db.update(id)
+  if (user.name && user.bio) {
+    db.update(id, user)
+      .then(users => {
+        if (users) {
+          res.status(200).json(users);
+        } else {
+          res.status(404).json({message: "The user with the specified ID does not exist."})
+        }
+      })
+      .catch(error => {
+      res.status(500).json({errorMessage: "The user information could not be modified."})
+    })
+  } else {
+    res.status(400).statusMessage({errorMessage: "Please provide name and bio for the user."})
+  }
 })
 
 server.listen(PORT, () => {
