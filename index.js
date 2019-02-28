@@ -52,15 +52,23 @@ server.delete('/api/users/:id', (req, res) => {
       } else {
         res.status(404).json({message: "The user with the specified ID does not exist."})
       }
-      
     })
     .catch(error => {
       res.status(500).json({message: "The user could not be removed."})
     })
 })
 
-
-
+server.get('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  db.findById(id)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(404).json({message: "The user with the specified ID does not exist."})
+    }
+    )
+})
 
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
